@@ -26,6 +26,8 @@
 #include <errno.h>
 #include <iostream>
 #include <thread>
+#include "c4IndexTypes.h"
+#include "c4Index.h"
 
 #include "sqlite3.h"
 
@@ -904,6 +906,28 @@ TEST_CASE("Database Upgrade From 2.7 to New Rev-Trees", "[Database][Upgrade][C]"
 // In 3.0 it's no longer possible to open 2.7 databases without upgrading
 //    testOpeningOlderDBFixture("upgrade_2.7.cblite2", kC4DB_NoUpgrade);
 //    testOpeningOlderDBFixture("upgrade_2.7.cblite2", kC4DB_ReadOnly);
+}
+
+
+TEST_CASE("Database Upgrade From 2.8", "[Database][Upgrade][C]") {
+    
+    string dbPath = "upgrade_2.8.cblite2";
+//    dbPath = "testdb_noindex_1.cblite2";
+    C4DatabaseFlags withFlags{0};
+    
+    C4Log("---- Opening copy of db %s with flags 0x%x", dbPath.c_str(), withFlags);
+    C4DatabaseConfig2 config = {slice(TempDir()), withFlags};
+    C4Database *db;
+    auto name = C4Test::copyFixtureDB(kVersionedFixturesSubDir + dbPath);
+    C4Log("---- copy Fixture: %s => %s/%s", string(litecore::FilePath(C4Test::sFixturesDir + kVersionedFixturesSubDir + dbPath, "")).c_str(),
+          TempDir().c_str(), name.asString().c_str());
+    
+    db = c4db_openNamed(name, &config, ERROR_INFO());
+    REQUIRE(db);
+
+//        C4Error err;
+//        c4db_createIndex(db, C4STR("index1"), c4str(json5("[['.firstName'], ['.lastName']]").c_str()), kC4ValueIndex, nullptr, WITH_ERROR(&err));
+
 }
 
 
