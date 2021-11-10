@@ -362,7 +362,7 @@ public:
                                              (string)(slice)_address.hostname,
                                              port,
                                              path);
-        r->setHeaders(headers).setBody(body).setTimeout(5);
+        r->setHeaders(headers).setBody(body).setTimeout(20);
         if (pinnedCert)
             r->allowOnlyCert(pinnedCert);
         if (_authHeader)
